@@ -110,7 +110,7 @@ void RecordHelper::overrideCreatureRecord(const mwmp::CreatureRecord& record)
 
     if (recordData.mId.empty())
     {
-        LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Ignoring record override with no id provided");
+        LOG_APPEND(Log::LOG_INFO, "-- Ignoring record override with no id provided");
         return;
     }
 
@@ -164,6 +164,11 @@ void RecordHelper::overrideCreatureRecord(const mwmp::CreatureRecord& record)
 
         world->getModifiableStore().overrideRecord(finalData);
     }
+    else
+    {
+        LOG_APPEND(Log::LOG_INFO, "-- Ignoring record override with invalid baseId %s", record.baseId.c_str());
+        return;
+    }
 
     if (isExistingId)
         world->updatePtrsWithRefId(recordData.mId);
@@ -175,7 +180,7 @@ void RecordHelper::overrideNpcRecord(const mwmp::NpcRecord& record)
 
     if (recordData.mId.empty())
     {
-        LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Ignoring record override with no id provided");
+        LOG_APPEND(Log::LOG_INFO, "-- Ignoring record override with no id provided");
         return;
     }
 
@@ -186,12 +191,12 @@ void RecordHelper::overrideNpcRecord(const mwmp::NpcRecord& record)
     {
         if (!doesRaceRecordExist(recordData.mRace))
         {
-            LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Ignoring new NPC record with invalid race provided");
+            LOG_APPEND(Log::LOG_INFO, "-- Ignoring new NPC record with invalid race provided");
             return;
         }
         else if (!doesClassRecordExist(recordData.mClass))
         {
-            LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Ignoring new NPC record with invalid class provided");
+            LOG_APPEND(Log::LOG_INFO, "-- Ignoring new NPC record with invalid class provided");
             return;
         }
         else
@@ -272,6 +277,11 @@ void RecordHelper::overrideNpcRecord(const mwmp::NpcRecord& record)
 
         world->getModifiableStore().overrideRecord(finalData);
     }
+    else
+    {
+        LOG_APPEND(Log::LOG_INFO, "-- Ignoring record override with invalid baseId %s", record.baseId.c_str());
+        return;
+    }
 
     if (isExistingId)
         world->updatePtrsWithRefId(recordData.mId);
@@ -283,18 +293,17 @@ void RecordHelper::overrideEnchantmentRecord(const mwmp::EnchantmentRecord& reco
 
     if (recordData.mId.empty())
     {
-        LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Ignoring record override with no id provided");
+        LOG_APPEND(Log::LOG_INFO, "-- Ignoring record override with no id provided");
         return;
     }
 
-    bool isExistingId = doesEnchantmentRecordExist(recordData.mId);
     MWBase::World *world = MWBase::Environment::get().getWorld();
 
     if (record.baseId.empty())
     {
         if (recordData.mEffects.mList.empty())
         {
-            LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Ignoring new enchantment record with no effects");
+            LOG_APPEND(Log::LOG_INFO, "-- Ignoring new enchantment record with no effects");
             return;
         }
         else
@@ -323,6 +332,11 @@ void RecordHelper::overrideEnchantmentRecord(const mwmp::EnchantmentRecord& reco
 
         world->getModifiableStore().overrideRecord(finalData);
     }
+    else
+    {
+        LOG_APPEND(Log::LOG_INFO, "-- Ignoring record override with invalid baseId %s", record.baseId.c_str());
+        return;
+    }
 }
 
 void RecordHelper::overridePotionRecord(const mwmp::PotionRecord& record)
@@ -331,7 +345,7 @@ void RecordHelper::overridePotionRecord(const mwmp::PotionRecord& record)
 
     if (recordData.mId.empty())
     {
-        LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Ignoring record override with no id provided");
+        LOG_APPEND(Log::LOG_INFO, "-- Ignoring record override with no id provided");
         return;
     }
 
@@ -374,6 +388,11 @@ void RecordHelper::overridePotionRecord(const mwmp::PotionRecord& record)
 
         world->getModifiableStore().overrideRecord(finalData);
     }
+    else
+    {
+        LOG_APPEND(Log::LOG_INFO, "-- Ignoring record override with invalid baseId %s", record.baseId.c_str());
+        return;
+    }
 
     if (isExistingId)
         world->updatePtrsWithRefId(recordData.mId);
@@ -385,7 +404,7 @@ void RecordHelper::overrideSpellRecord(const mwmp::SpellRecord& record)
 
     if (recordData.mId.empty())
     {
-        LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Ignoring record override with no id provided");
+        LOG_APPEND(Log::LOG_INFO, "-- Ignoring record override with no id provided");
         return;
     }
 
@@ -419,9 +438,11 @@ void RecordHelper::overrideSpellRecord(const mwmp::SpellRecord& record)
 
         world->getModifiableStore().overrideRecord(finalData);
     }
-
-    if (isExistingId)
-        world->updatePtrsWithRefId(recordData.mId);
+    else
+    {
+        LOG_APPEND(Log::LOG_INFO, "-- Ignoring record override with invalid baseId %s", record.baseId.c_str());
+        return;
+    }
 }
 
 void RecordHelper::overrideArmorRecord(const mwmp::ArmorRecord& record)
@@ -430,7 +451,7 @@ void RecordHelper::overrideArmorRecord(const mwmp::ArmorRecord& record)
 
     if (recordData.mId.empty())
     {
-        LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Ignoring record override with no id provided");
+        LOG_APPEND(Log::LOG_INFO, "-- Ignoring record override with no id provided");
         return;
     }
 
@@ -441,7 +462,7 @@ void RecordHelper::overrideArmorRecord(const mwmp::ArmorRecord& record)
     {
         if (!recordData.mEnchant.empty() && !doesEnchantmentRecordExist(recordData.mEnchant))
         {
-            LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Ignoring new armor record with invalid enchantment provided");
+            LOG_APPEND(Log::LOG_INFO, "-- Ignoring new armor record with invalid enchantmentId %s", recordData.mEnchant.c_str());
             return;
         }
         else
@@ -479,8 +500,13 @@ void RecordHelper::overrideArmorRecord(const mwmp::ArmorRecord& record)
         if (record.baseOverrides.hasArmorRating)
             finalData.mData.mArmor = recordData.mData.mArmor;
 
-        if (record.baseOverrides.hasEnchantmentId && doesEnchantmentRecordExist(recordData.mEnchant))
-            finalData.mEnchant = recordData.mEnchant;
+        if (record.baseOverrides.hasEnchantmentId)
+        {
+            if (doesEnchantmentRecordExist(recordData.mEnchant))
+                finalData.mEnchant = recordData.mEnchant;
+            else
+                LOG_APPEND(Log::LOG_INFO, "-- Ignoring invalid enchantmentId %s", recordData.mEnchant.c_str());
+        }
 
         if (record.baseOverrides.hasEnchantmentCharge)
             finalData.mData.mEnchant = recordData.mData.mEnchant;
@@ -493,6 +519,11 @@ void RecordHelper::overrideArmorRecord(const mwmp::ArmorRecord& record)
 
         world->getModifiableStore().overrideRecord(finalData);
     }
+    else
+    {
+        LOG_APPEND(Log::LOG_INFO, "-- Ignoring record override with invalid baseId %s", record.baseId.c_str());
+        return;
+    }
 
     if (isExistingId)
         world->updatePtrsWithRefId(recordData.mId);
@@ -504,7 +535,7 @@ void RecordHelper::overrideBookRecord(const mwmp::BookRecord& record)
 
     if (recordData.mId.empty())
     {
-        LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Ignoring record override with no id provided");
+        LOG_APPEND(Log::LOG_INFO, "-- Ignoring record override with no id provided");
         return;
     }
 
@@ -515,7 +546,7 @@ void RecordHelper::overrideBookRecord(const mwmp::BookRecord& record)
     {
         if (!recordData.mEnchant.empty() && !doesEnchantmentRecordExist(recordData.mEnchant))
         {
-            LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Ignoring new book record with invalid enchantment provided");
+            LOG_APPEND(Log::LOG_INFO, "-- Ignoring new book record with invalid enchantmentId %s", recordData.mEnchant.c_str());
             return;
         }
         else
@@ -551,8 +582,13 @@ void RecordHelper::overrideBookRecord(const mwmp::BookRecord& record)
         if (record.baseOverrides.hasSkillId)
             finalData.mData.mSkillId = recordData.mData.mSkillId;
 
-        if (record.baseOverrides.hasEnchantmentId && doesEnchantmentRecordExist(recordData.mEnchant))
-            finalData.mEnchant = recordData.mEnchant;
+        if (record.baseOverrides.hasEnchantmentId)
+        {
+            if (doesEnchantmentRecordExist(recordData.mEnchant))
+                finalData.mEnchant = recordData.mEnchant;
+            else
+                LOG_APPEND(Log::LOG_INFO, "-- Ignoring invalid enchantmentId %s", recordData.mEnchant.c_str());
+        }
 
         if (record.baseOverrides.hasEnchantmentCharge)
             finalData.mData.mEnchant = recordData.mData.mEnchant;
@@ -561,6 +597,11 @@ void RecordHelper::overrideBookRecord(const mwmp::BookRecord& record)
             finalData.mScript = recordData.mScript;
 
         world->getModifiableStore().overrideRecord(finalData);
+    }
+    else
+    {
+        LOG_APPEND(Log::LOG_INFO, "-- Ignoring record override with invalid baseId %s", record.baseId.c_str());
+        return;
     }
 
     if (isExistingId)
@@ -573,7 +614,7 @@ void RecordHelper::overrideClothingRecord(const mwmp::ClothingRecord& record)
 
     if (recordData.mId.empty())
     {
-        LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Ignoring record override with no id provided");
+        LOG_APPEND(Log::LOG_INFO, "-- Ignoring record override with no id provided");
         return;
     }
 
@@ -584,7 +625,7 @@ void RecordHelper::overrideClothingRecord(const mwmp::ClothingRecord& record)
     {
         if (!recordData.mEnchant.empty() && !doesEnchantmentRecordExist(recordData.mEnchant))
         {
-            LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Ignoring new clothing record with invalid enchantment provided");
+            LOG_APPEND(Log::LOG_INFO, "-- Ignoring new clothing record with invalid enchantmentId %s", recordData.mEnchant.c_str());
             return;
         }
         else
@@ -614,8 +655,13 @@ void RecordHelper::overrideClothingRecord(const mwmp::ClothingRecord& record)
         if (record.baseOverrides.hasValue)
             finalData.mData.mValue = recordData.mData.mValue;
 
-        if (record.baseOverrides.hasEnchantmentId && doesEnchantmentRecordExist(recordData.mEnchant))
-            finalData.mEnchant = recordData.mEnchant;
+        if (record.baseOverrides.hasEnchantmentId)
+        {
+            if (doesEnchantmentRecordExist(recordData.mEnchant))
+                finalData.mEnchant = recordData.mEnchant;
+            else
+                LOG_APPEND(Log::LOG_INFO, "-- Ignoring invalid enchantmentId %s", recordData.mEnchant.c_str());
+        }
 
         if (record.baseOverrides.hasEnchantmentCharge)
             finalData.mData.mEnchant = recordData.mData.mEnchant;
@@ -628,6 +674,11 @@ void RecordHelper::overrideClothingRecord(const mwmp::ClothingRecord& record)
 
         world->getModifiableStore().overrideRecord(finalData);
     }
+    else
+    {
+        LOG_APPEND(Log::LOG_INFO, "-- Ignoring record override with invalid baseId %s", record.baseId.c_str());
+        return;
+    }
 
     if (isExistingId)
         world->updatePtrsWithRefId(recordData.mId);
@@ -639,7 +690,7 @@ void RecordHelper::overrideMiscellaneousRecord(const mwmp::MiscellaneousRecord& 
 
     if (recordData.mId.empty())
     {
-        LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Ignoring record override with no id provided");
+        LOG_APPEND(Log::LOG_INFO, "-- Ignoring record override with no id provided");
         return;
     }
 
@@ -679,6 +730,11 @@ void RecordHelper::overrideMiscellaneousRecord(const mwmp::MiscellaneousRecord& 
 
         world->getModifiableStore().overrideRecord(finalData);
     }
+    else
+    {
+        LOG_APPEND(Log::LOG_INFO, "-- Ignoring record override with invalid baseId %s", record.baseId.c_str());
+        return;
+    }
 
     if (isExistingId)
         world->updatePtrsWithRefId(recordData.mId);
@@ -690,7 +746,7 @@ void RecordHelper::overrideWeaponRecord(const mwmp::WeaponRecord& record)
 
     if (recordData.mId.empty())
     {
-        LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Ignoring record override with no id provided");
+        LOG_APPEND(Log::LOG_INFO, "-- Ignoring record override with no id provided");
         return;
     }
 
@@ -701,7 +757,7 @@ void RecordHelper::overrideWeaponRecord(const mwmp::WeaponRecord& record)
     {
         if (!recordData.mEnchant.empty() && !doesEnchantmentRecordExist(recordData.mEnchant))
         {
-            LOG_MESSAGE_SIMPLE(Log::LOG_INFO, "Ignoring new weapon record with invalid enchantment provided");
+            LOG_APPEND(Log::LOG_INFO, "-- Ignoring new weapon record with invalid enchantmentId %s", recordData.mEnchant.c_str());
             return;
         }
         else
@@ -761,8 +817,13 @@ void RecordHelper::overrideWeaponRecord(const mwmp::WeaponRecord& record)
         if (record.baseOverrides.hasFlags)
             finalData.mData.mFlags = recordData.mData.mFlags;
 
-        if (record.baseOverrides.hasEnchantmentId && doesEnchantmentRecordExist(recordData.mEnchant))
-            finalData.mEnchant = recordData.mEnchant;
+        if (record.baseOverrides.hasEnchantmentId)
+        {
+            if (doesEnchantmentRecordExist(recordData.mEnchant))
+                finalData.mEnchant = recordData.mEnchant;
+            else
+                LOG_APPEND(Log::LOG_INFO, "-- Ignoring invalid enchantmentId %s", recordData.mEnchant.c_str());
+        }
 
         if (record.baseOverrides.hasEnchantmentCharge)
             finalData.mData.mEnchant = recordData.mData.mEnchant;
@@ -771,6 +832,11 @@ void RecordHelper::overrideWeaponRecord(const mwmp::WeaponRecord& record)
             finalData.mScript = recordData.mScript;
 
         world->getModifiableStore().overrideRecord(finalData);
+    }
+    else
+    {
+        LOG_APPEND(Log::LOG_INFO, "-- Ignoring record override with invalid baseId %s", record.baseId.c_str());
+        return;
     }
 
     if (isExistingId)
